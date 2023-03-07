@@ -3,7 +3,6 @@ include .env
 DB_NAME="onecvdb"
 DB_URL="mysql://root:${MYSQL_ROOT_PASSWORD}@tcp/${DB_NAME}"
 
-
 mysql: 
 	docker run --name mysql-root -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d mysql:8.0
 
@@ -29,4 +28,7 @@ migratedown-1:
 	@echo "Migrating..." 
 	migrate -path db/migrations/ -database ${DB_URL} -verbose down 1
 
-.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1
+sqlc: 
+	sqlc generate
+
+.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc
