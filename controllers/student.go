@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"Zxun2/OneCV-Govtech/errors"
+	"Zxun2/OneCV-Govtech/models"
+	"Zxun2/OneCV-Govtech/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,5 +11,14 @@ import (
 
 // Suspend suspends a student
 func Suspend(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var payload models.SuspendStudentPayload
+
+	err := c.ShouldBindJSON(&payload)
+	if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, errors.MakeResponseErr(models.ServerError),
+		)
+	}
+
+	response := services.SuspendStudent(payload)
+	c.JSON(errors.MakeResponseCode(response.Response), response)
 }
