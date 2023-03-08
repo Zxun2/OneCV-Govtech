@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/spf13/viper"
+	"gorm.io/gorm/logger"
 )
 
 // Config stores all configuration of the application.
@@ -10,6 +11,7 @@ type Config struct {
 	Environment          string        `mapstructure:"ENVIRONMENT"`
 	DatabaseURL 			 	 string        `mapstructure:"DATABASE_URL"`
 	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
+	LogLevel     				 logger.LogLevel
 }
 
 // LoadConfig reads configuration from file or environment variables.
@@ -17,7 +19,6 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
-
 	viper.AutomaticEnv()
 
 	err = viper.ReadInConfig()
