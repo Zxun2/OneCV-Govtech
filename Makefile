@@ -1,4 +1,4 @@
-include .env
+include app.env
 
 DB_NAME="onecvdb"
 DB_URL="mysql://root:${MYSQL_ROOT_PASSWORD}@tcp/${DB_NAME}"
@@ -31,4 +31,9 @@ migratedown-1:
 sqlc: 
 	sqlc generate
 
-.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc
+server:
+	@echo "Starting server..."
+	go build -o main .
+	go run .
+
+.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc start
