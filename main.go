@@ -9,6 +9,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/logger"
 
 	"github.com/gin-contrib/cors"
 )
@@ -19,7 +20,17 @@ func main() {
 		log.Fatal("Cannot load config: ", err)
 	}
 
-	database, err := db.Connect(config.DatabaseURL)
+	switch config.Environment {
+		case "development":
+			config.LogLevel = logger.Info
+		case "test":
+			config.LogLevel = logger.Silent
+		case "production":
+			config.LogLevel = logger.Warn
+		default:
+	}
+
+	database, err := db.Connect(config)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
