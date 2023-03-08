@@ -1,10 +1,10 @@
 CREATE TABLE `teachers` (
-  `id` bigint PRIMARY KEY,
+  `id`  bigint PRIMARY KEY auto_increment,
   `email` varchar(255) NOT NULL
 );
 
 CREATE TABLE `students` (
-  `id` bigint PRIMARY KEY,
+  `id` bigint PRIMARY KEY auto_increment,
   `email` varchar(255) NOT NULL,
   `status` ENUM ('suspended', 'active') NOT NULL DEFAULT "active"
 );

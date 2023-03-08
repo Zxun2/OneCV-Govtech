@@ -1,5 +1,7 @@
 package models
 
+import "Zxun2/OneCV-Govtech/errors"
+
 // Status is the model for the status columns
 type Status string
 
@@ -10,10 +12,20 @@ const  (
 	ACTIVE 		Status = "active"
 )
 
+const (
+	studentModelName = "Student"
+)
+
+var (
+	// ErrStudentNotFound is the error for when a student is not found
+	ErrStudentNotFound = &errors.RecordNotFoundError{Model: studentModelName}
+)
+
 // Student is the model for the students table
 type Student struct {
-	ID     	uint8  		`gorm:"primaryKey" json:"id"`
-	Email  	string 		`gorm:"not null;unique" json:"email"`
-	Status 	Status 		`gorm:"default:active;not null" json:"status"`
-	Teachers []Teacher `gorm:"many2many:teacher_students" json:"teacher"`
+	ID     		uint8  		`gorm:"primaryKey" json:"id"`
+	Email  		string 		`gorm:"not null;unique" json:"email"`
+	Status 		Status 		`gorm:"default:active;not null" json:"status"`
+	Teachers 	[]Teacher `gorm:"many2many:teacher_students" json:"teacher"`
 }
+

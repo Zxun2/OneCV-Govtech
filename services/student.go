@@ -11,7 +11,7 @@ func SuspendStudent(payload models.SuspendStudentPayload) (response models.Suspe
 	_, err := getStudentByEmailAndUpdateStatus(payload.Student)
 	if err != nil {
 		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(models.NotFound),
+			Response: errors.MakeResponseErr(err),
 		}
 	}
 	return models.SuspendStudentResponse{}
@@ -19,8 +19,11 @@ func SuspendStudent(payload models.SuspendStudentPayload) (response models.Suspe
 
 func getStudentByEmailAndUpdateStatus(email string) (*models.Student, error) {
 	student := models.Student{}
-	err :=  db.Store.Model(&models.Student{Email: email}).Find(&student).Update("status", models.SUSPENDED).Error
-	return nil, err
+	result :=  db.Store.Model(&models.Student{Email: email}).Find(&student).Update("status", models.SUSPENDED)
+	if result.RowsAffected == 0 {
+		return nil, models.ErrStudentNotFound
+	}
+	return nil, result.Error
 }
 
 func checkStudentExists(email string) bool {

@@ -11,32 +11,29 @@ import (
 // RegisterStudentsToTeacher registers multiple students to a teacher
 func RegisterStudentsToTeacher(payload models.RegistersStudentsPayload) (response models.SuspendStudentResponse) {
 	teacher, err := getTeacherByEmail(payload.Teacher)
-	log.Println(payload.Students)
 	if err != nil {
 		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(models.ServerError),
+			Response: errors.MakeResponseErr(err),
 		}
 	}
 
 	students, err := getStudentsByEmail(payload.Students)
 	if err != nil {
 		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(models.ServerError),
+			Response: errors.MakeResponseErr(err),
 		}
 	}
 
 	if len(students) != len(payload.Students) || teacher.Email == "" {
 		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(models.NotFound),
+			Response: errors.MakeResponseErr(models.ErrStudentNotFound),
 		}
 	}
-
-	log.Println(students)
 
 	err = db.Store.Model(&teacher).Association("Students").Append(students)
 	if err != nil {
 		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(models.ServerError),
+			Response: errors.MakeResponseErr(err),
 		}
 	}
 
@@ -93,7 +90,7 @@ func ListStudentsReceiveNotifications(payload models.ListStudentReceivingNotific
 	if teacher.Email == "" {
 			// Handle error: no teacher found for the given email
 			return models.ListStudentReceivingNotificationResponse{
-				Response: errors.MakeResponseErr(models.NotFound),
+				Response: errors.MakeResponseErr(models.ErrTeacherNotFound),
 			}
 	}
 
