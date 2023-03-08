@@ -7,12 +7,6 @@ type Teacher struct {
 	Students []Student `gorm:"many2many:teacher_students" json:"students"`
 }
 
-// TeacherStudent is the model for the teacher_students table
-type TeacherStudent struct {
-	TeacherID uint8 `gorm:"primaryKey"`
-	StudentID uint8 `gorm:"primaryKey"`
-}
-
 // SuspendStudentPayload - incoming request
 type SuspendStudentPayload struct {
 	Student string `json:"student"`
@@ -42,7 +36,7 @@ type RetrieveCommonStudentsPayload struct {
 // RetrieveCommonStudentsResponse - outgoing response
 type RetrieveCommonStudentsResponse struct {
 	Response
-	Student []string `json:"students"`
+	Students []string `json:"students"`
 }
 
 // ListStudentReceivingNotificationPayload - incoming request
@@ -54,5 +48,5 @@ type ListStudentReceivingNotificationPayload struct {
 // ListStudentReceivingNotificationResponse - outgoing response
 type ListStudentReceivingNotificationResponse struct {
 	Response
-	Student []string `json:"recipients"`
+	Recipients []string `json:"recipients"`
 }
