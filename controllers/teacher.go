@@ -16,12 +16,10 @@ func RetrieveNotifications(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, errors.MakeResponseErr(models.ServerError),
+			c.AbortWithStatusJSON(http.StatusBadRequest, errors.MakeResponseErr(err),
 		)
 	}
-
 	response := services.ListStudentsReceiveNotifications(payload)
-
 	c.JSON(http.StatusOK, response)
 }
 
@@ -31,13 +29,14 @@ func Register(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, errors.MakeResponseErr(models.ServerError),
+			c.AbortWithStatusJSON(http.StatusBadRequest, errors.MakeResponseErr(err),
 		)
 	}
 
 	response := services.RegisterStudentsToTeacher(payload)
-	if response.Error != "" {
-		c.JSON(errors.MakeResponseCode(response.Response), response)
+	if response.Message != "" {
+		c.JSON(http.StatusInternalServerError, response)
+		return
 	}
 	c.JSON(http.StatusNoContent, gin.H{})
 }
@@ -50,7 +49,7 @@ func GetCommonStudents(c *gin.Context) {
 	students, err := services.GetCommonStudents(teachers)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.RetrieveCommonStudentsResponse{
-			Response: errors.MakeResponseErr(models.ServerError),
+			Response: errors.MakeResponseErr(err),
 		})
 		return
 	}

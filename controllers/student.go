@@ -15,10 +15,9 @@ func Suspend(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, errors.MakeResponseErr(models.ServerError),
+			c.AbortWithStatusJSON(http.StatusInternalServerError, errors.MakeResponseErr(err),
 		)
 	}
-
 	response := services.SuspendStudent(payload)
 	c.JSON(errors.MakeResponseCode(response.Response), response)
 }

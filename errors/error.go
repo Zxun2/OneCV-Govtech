@@ -1,19 +1,19 @@
 package errors
 
 import (
-	"Zxun2/OneCV-Govtech/models"
+	"Zxun2/OneCV-Govtech/api"
 	"net/http"
 )
 
 // MakeResponseCode returns the http status code based on the error code
-func MakeResponseCode(response models.Response) int {
-	if len(response.Error) == 0 {
+func MakeResponseCode(response api.Response) int {
+	if len(response.Message) == 0 {
 		return http.StatusOK
 	}
 	return http.StatusInternalServerError
 }
 
 // MakeResponseErr returns the response with the error code
-func MakeResponseErr(err models.ErrorCode) models.Response {
-	return models.Response{Error: string(err)}
+func MakeResponseErr(err error) api.Response {
+	return api.Response{Message: err.Error()}
 }
