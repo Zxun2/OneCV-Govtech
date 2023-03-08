@@ -2,19 +2,16 @@ package main
 
 import (
 	"Zxun2/OneCV-Govtech/controllers"
+	"Zxun2/OneCV-Govtech/db"
 	"Zxun2/OneCV-Govtech/models"
+	"Zxun2/OneCV-Govtech/seed"
 	"Zxun2/OneCV-Govtech/utils"
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 
 	"github.com/gin-contrib/cors"
 )
-
-// DB is the global database connection
-var DB *gorm.DB
 
 func main() {
 	config, err := utils.LoadConfig(".")
@@ -22,17 +19,20 @@ func main() {
 		log.Fatal("Cannot load config: ", err)
 	}
 
-	DB, err = gorm.Open(mysql.Open(config.DatabaseURL), &gorm.Config{})
+	database, err := db.Connect(config.DatabaseURL)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
+	log.Printf("Connected to database: %s", config.DatabaseURL)
 
-	DB.AutoMigrate(&models.Teacher{}, &models.Student{}, &models.TeacherStudent{})
+	database.AutoMigrate(&models.Teacher{}, &models.Student{})
+	log.Printf("Successfully migrated models")
 
+	seed.SeedData()
 
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
@@ -40,10 +40,10 @@ func main() {
 
 	api := router.Group("/api")
 
-	api.POST("/register", controllers.Placeholder)
-	api.GET("/commonStudents", controllers.Placeholder)
-	api.POST("/suspend", controllers.Placeholder)
-	api.POST("/retrievefornotifications", controllers.Placeholder)
+	api.POST("/register", controllers.Register)
+	api.GET("/commonstudents", controllers.GetCommonStudents)
+	api.POST("/suspend", controllers.Suspend)
+	api.POST("/retrievefornotifications", controllers.RetrieveNotifications)
 
 	router.Run(config.HTTPServerAddress)
 }
