@@ -1,56 +1,52 @@
 package services
 
 import (
-	"Zxun2/OneCV-Govtech/db"
-	"Zxun2/OneCV-Govtech/errors"
 	"Zxun2/OneCV-Govtech/models"
 	"Zxun2/OneCV-Govtech/utils"
 	"log"
+
+	"gorm.io/gorm"
 )
 
 // RegisterStudentsToTeacher registers multiple students to a teacher
-func RegisterStudentsToTeacher(payload models.RegistersStudentsPayload) (response models.SuspendStudentResponse) {
-	teacher, err := getTeacherByEmail(payload.Teacher)
+func RegisterStudentsToTeacher(db *gorm.DB, teacherEmail string, studentEmails []string) (error) {
+	teacher, err := getTeacherByEmail(db, teacherEmail)
 	if err != nil {
-		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(err),
-		}
+		return err
 	}
 
-	students, err := getStudentsByEmail(payload.Students)
+	students, err := getStudentsByEmail(db, studentEmails)
 	if err != nil {
-		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(err),
-		}
+		return err
 	}
 
-	if len(students) != len(payload.Students) || teacher.Email == "" {
-		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(models.ErrStudentNotFound),
-		}
+	if len(students) != len(studentEmails)  {
+		return models.ErrStudentNotFound
 	}
 
-	err = db.Store.Model(&teacher).Association("Students").Append(students)
+	if teacher.Email == "" {
+		return models.ErrTeacherNotFound
+	}
+
+	err = db.Model(&teacher).Association("Students").Append(students)
 	if err != nil {
-		return models.SuspendStudentResponse{
-			Response: errors.MakeResponseErr(err),
-		}
+		return err
 	}
 
-	return models.SuspendStudentResponse{}
+	return nil
 }
 
-func getTeacherByEmail(email string) (*models.Teacher, error) {
+func getTeacherByEmail(db *gorm.DB, email string) (*models.Teacher, error) {
 	teacher := models.Teacher{}
-	err :=  db.Store.Model(&models.Teacher{}).Where("email = ?", email).Find(&teacher).Error
+	err :=  db.Model(&models.Teacher{}).Where("email = ?", email).Find(&teacher).Error
 	log.Println(teacher)
 	return &teacher, err
 }
 
 // GetCommonStudents retrieves a list of students common to a given list of teachers
-func GetCommonStudents(teacherEmails []string) ([]string, error) {
+func GetCommonStudents(db *gorm.DB, teacherEmails []string) ([]string, error) {
 	var students []models.Student
-	err := db.Store.Table("students").
+	err := db.Table("students").
 		Select("students.email").
 		Joins("JOIN teacher_students ON students.id = teacher_students.student_id").
 		Joins("JOIN teachers ON teachers.id = teacher_students.teacher_id").
@@ -73,25 +69,18 @@ func GetCommonStudents(teacherEmails []string) ([]string, error) {
 }
 
 // ListStudentsReceiveNotifications retrieves a list of students who can receive a given notification.
-func ListStudentsReceiveNotifications(payload models.ListStudentReceivingNotificationPayload) (models.ListStudentReceivingNotificationResponse) {
-	teacherEmail := payload.Teacher
-	notification := payload.Notification
-
+func ListStudentsReceiveNotifications(db *gorm.DB, teacherEmail string, notification string) ([]string, error) {
 	studentEmails := utils.ParseEmails(notification)
-
-	log.Println(studentEmails)
 
 	var teacher models.Teacher
 	var students []string = studentEmails
 
-	db.Store.Model(models.Teacher{}).Preload("Students").Where("email = ?", teacherEmail).
+	db.Model(models.Teacher{}).Preload("Students").Where("email = ?", teacherEmail).
 			First(&teacher)
 
 	if teacher.Email == "" {
 			// Handle error: no teacher found for the given email
-			return models.ListStudentReceivingNotificationResponse{
-				Response: errors.MakeResponseErr(models.ErrTeacherNotFound),
-			}
+			return nil, models.ErrTeacherNotFound
 	}
 
 	for i := range teacher.Students {
@@ -100,7 +89,5 @@ func ListStudentsReceiveNotifications(payload models.ListStudentReceivingNotific
 			}
 	}
 
-	return models.ListStudentReceivingNotificationResponse{
-		Recipients: students,
-	}
+	return students, nil
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"Zxun2/OneCV-Govtech/api"
 	"Zxun2/OneCV-Govtech/errors"
 )
 
@@ -22,46 +21,3 @@ type Teacher struct {
 	Students 			[]Student `gorm:"many2many:teacher_students" json:"students"`
 }
 
-// SuspendStudentPayload - incoming request
-type SuspendStudentPayload struct {
-	Student 			string `json:"student"`
-}
-
-// SuspendStudentResponse - outgoing response
-type SuspendStudentResponse struct {
-	api.Response
-}
-
-// RegistersStudentsPayload - incoming request
-type RegistersStudentsPayload struct {
-	Teacher 			string   `json:"teacher"`
-	Students 			[]string `json:"students"`
-}
-
-// RegistersStudentsResponse - outgoing response
-type RegistersStudentsResponse struct {
-	api.Response
-}
-
-// RetrieveCommonStudentsPayload - incoming request
-type RetrieveCommonStudentsPayload struct {
-	Students 			[]string `json:"students"`
-}
-
-// RetrieveCommonStudentsResponse - outgoing response
-type RetrieveCommonStudentsResponse struct {
-	api.Response
-	Students 			[]string `json:"students"`
-}
-
-// ListStudentReceivingNotificationPayload - incoming request
-type ListStudentReceivingNotificationPayload struct {
-	Teacher 			string `json:"teacher"`
-	Notification 	string `json:"notification"`
-}
-
-// ListStudentReceivingNotificationResponse - outgoing response
-type ListStudentReceivingNotificationResponse struct {
-	api.Response
-	Recipients 		[]string `json:"recipients"`
-}

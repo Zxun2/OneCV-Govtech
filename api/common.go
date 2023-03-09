@@ -1,20 +1,65 @@
 package api
 
-// ErrorCode indicates the type of error
-type ErrorCode string
-
-const (
-	// NotFound indicates that the resource is not found
-	NotFound          ErrorCode = "%s not found"
-	// ServerError indicates that the server encountered an error
-	ServerError       ErrorCode = "something went wrong!"
-	// TypeMismatch indicates that the type of the value is not correct
-	TypeMismatch      ErrorCode = "there is a type mismatch"
-	// ConflictError indicates that the resource already exists
-	ConflictError     ErrorCode = "conflict"
+import (
+	"net/http"
 )
 
 // Response is the model for the response
 type Response struct {
 	Message			string `json:"message,omitempty"`
+}
+
+// SuspendStudentPayload - incoming request
+type SuspendStudentPayload struct {
+	Student 			string `json:"student"`
+}
+
+// SuspendStudentResponse - outgoing response
+type SuspendStudentResponse struct {
+	Response
+}
+
+// RegistersStudentsPayload - incoming request
+type RegistersStudentsPayload struct {
+	Teacher 			string   `json:"teacher"`
+	Students 			[]string `json:"students"`
+}
+
+// RegistersStudentsResponse - outgoing response
+type RegistersStudentsResponse struct {
+	Response
+}
+
+// RetrieveCommonStudentsPayload - incoming request
+type RetrieveCommonStudentsPayload struct {
+	Students 			[]string `json:"students"`
+}
+
+// RetrieveCommonStudentsResponse - outgoing response
+type RetrieveCommonStudentsResponse struct {
+	Response
+	Students 			[]string `json:"students"`
+}
+
+// ListStudentReceivingNotificationPayload - incoming request
+type ListStudentReceivingNotificationPayload struct {
+	Teacher 			string `json:"teacher"`
+	Notification 	string `json:"notification"`
+}
+
+// ListStudentReceivingNotificationResponse - outgoing response
+type ListStudentReceivingNotificationResponse struct {
+	Response
+	Recipients 		[]string `json:"recipients"`
+}
+
+func makeResponseCode(response Response) int {
+	if len(response.Message) == 0 {
+		return http.StatusOK
+	}
+	return http.StatusInternalServerError
+}
+
+func makeResponseErr(err error) Response {
+	return Response{Message: err.Error()}
 }
