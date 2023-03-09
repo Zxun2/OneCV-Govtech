@@ -1,17 +1,15 @@
 package main
 
 import (
-	"Zxun2/OneCV-Govtech/controllers"
+	"Zxun2/OneCV-Govtech/api"
 	"Zxun2/OneCV-Govtech/db"
 	"Zxun2/OneCV-Govtech/models"
 	"Zxun2/OneCV-Govtech/seed"
 	"Zxun2/OneCV-Govtech/utils"
 	"log"
 
-	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-
-	"github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -41,20 +39,18 @@ func main() {
 
 	seed.SeedData()
 
-	router := gin.Default()
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}))
+	runServer(config, database)
 
-	api := router.Group("/api")
+}
 
-	api.POST("/register", controllers.Register)
-	api.GET("/commonstudents", controllers.GetCommonStudents)
-	api.POST("/suspend", controllers.Suspend)
-	api.POST("/retrievefornotifications", controllers.RetrieveNotifications)
+func runServer(config utils.Config, store *gorm.DB) {
+	server, err := api.NewServer(config, store)
+	if err != nil {
+		log.Fatal("cannot create server:", err)
+	}
 
-	router.Run(config.HTTPServerAddress)
+	err = server.Start(config.HTTPServerAddress)
+	if err != nil {
+		log.Fatal("Cannot start server")
+	}
 }
