@@ -27,3 +27,16 @@ func CreateListOfRandomEmails(n int) []string {
 	}
 	return emails
 }
+
+// RemoveDuplicates removes duplicate emails
+func RemoveDuplicates	(input []string) []string {
+	keys := make(map[string]bool)
+	list := []string{} 
+	for _, entry := range input {
+			if _, value := keys[entry]; !value {
+					keys[entry] = true
+					list = append(list, entry)
+			}
+	}
+	return list
+}

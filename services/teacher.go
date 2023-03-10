@@ -3,6 +3,7 @@ package services
 import (
 	"Zxun2/OneCV-Govtech/models"
 	"Zxun2/OneCV-Govtech/utils"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -15,7 +16,6 @@ func CreateTeacher(db *gorm.DB, email string) (*gorm.DB, error) {
 	result := db.Create(&teacher)
 	return result, result.Error
 }
-
 
 // GetTeacher gets a teacher by email
 func GetTeacher(db *gorm.DB, email string) (*models.Teacher, error) {
@@ -33,6 +33,8 @@ func DeleteTeacher(db *gorm.DB, email string) (*gorm.DB, error) {
 
 // RegisterStudentsToTeacher registers multiple students to a teacher
 func RegisterStudentsToTeacher(db *gorm.DB, teacherEmail string, studentEmails []string) (error) {
+	studentEmails = utils.RemoveDuplicates(studentEmails)
+
 	teacher, err := GetTeacher(db, teacherEmail)
 	if err != nil {
 		return err
@@ -61,6 +63,12 @@ func RegisterStudentsToTeacher(db *gorm.DB, teacherEmail string, studentEmails [
 
 // GetCommonStudents retrieves a list of students common to a given list of teachers
 func GetCommonStudents(db *gorm.DB, teacherEmails []string) ([]string, error) {
+	teacherEmails = utils.RemoveDuplicates(teacherEmails)
+
+	if len(teacherEmails) == 0 {
+		return []string{}, errors.New("No teacher emails provided")
+	}
+
 	var students []models.Student
 	err := db.Table("students").
 		Select("students.email").
@@ -72,7 +80,7 @@ func GetCommonStudents(db *gorm.DB, teacherEmails []string) ([]string, error) {
 		Find(&students).Error
 
 		if err != nil {
-			return nil, err
+			return []string{}, err
 		}
 
 		var studentEmails []string 
