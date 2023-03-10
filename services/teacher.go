@@ -3,14 +3,37 @@ package services
 import (
 	"Zxun2/OneCV-Govtech/models"
 	"Zxun2/OneCV-Govtech/utils"
-	"log"
 
 	"gorm.io/gorm"
 )
 
+// CreateTeacher create a teacher
+func CreateTeacher(db *gorm.DB, email string) (*gorm.DB, error) {
+	teacher := models.Teacher{
+		Email: email,
+	}
+	result := db.Create(&teacher)
+	return result, result.Error
+}
+
+
+// GetTeacher gets a teacher by email
+func GetTeacher(db *gorm.DB, email string) (*models.Teacher, error) {
+	teacher := models.Teacher{}
+	result := db.Preload("Students").Where("email = ?", email).First(&teacher)
+	return &teacher, result.Error
+}
+
+// DeleteTeacher deletes a teacher
+func DeleteTeacher(db *gorm.DB, email string) (*gorm.DB, error) {
+	teacher := models.Teacher{}
+	result := db.Where("email = ?", email).Delete(&teacher)
+	return result, result.Error
+}
+
 // RegisterStudentsToTeacher registers multiple students to a teacher
 func RegisterStudentsToTeacher(db *gorm.DB, teacherEmail string, studentEmails []string) (error) {
-	teacher, err := getTeacherByEmail(db, teacherEmail)
+	teacher, err := GetTeacher(db, teacherEmail)
 	if err != nil {
 		return err
 	}
@@ -34,13 +57,6 @@ func RegisterStudentsToTeacher(db *gorm.DB, teacherEmail string, studentEmails [
 	}
 
 	return nil
-}
-
-func getTeacherByEmail(db *gorm.DB, email string) (*models.Teacher, error) {
-	teacher := models.Teacher{}
-	err :=  db.Model(&models.Teacher{}).Where("email = ?", email).Find(&teacher).Error
-	log.Println(teacher)
-	return &teacher, err
 }
 
 // GetCommonStudents retrieves a list of students common to a given list of teachers

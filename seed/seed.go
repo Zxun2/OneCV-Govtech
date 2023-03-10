@@ -1,15 +1,15 @@
 package seed
 
 import (
-	"Zxun2/OneCV-Govtech/db"
 	"Zxun2/OneCV-Govtech/models"
 	"Zxun2/OneCV-Govtech/utils"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 // SeedData generates sample seed data
-func SeedData() (err error) {
+func SeedData(db *gorm.DB) (err error) {
 
 	var teachers []models.Teacher
 	var students []models.Student
@@ -71,23 +71,23 @@ func SeedData() (err error) {
 		})
 	}
 
-	db.Store.Clauses(clause.OnConflict{
+	db.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(&teachers)
 		
-	db.Store.Clauses(clause.OnConflict{
+	db.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(&students)
 		
-	db.Store.Clauses(clause.OnConflict{
+	db.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(&suspendedStudents)
 		
-	db.Store.Clauses(clause.OnConflict{
+	db.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(&studentsWithCommonTeachers)
 		
-	db.Store.Clauses(clause.OnConflict{
+	db.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).Create(&teachersWithCommonStudents)
 
