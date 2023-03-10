@@ -22,14 +22,13 @@ func TestMain(m *testing.M) {
 		log.Fatal("Cannot load config: ", err)
 	}
 
-	sqlDB, err := sql.Open(config.DatabaseDriver,config.TestDatabaseURL)
+	sqlDB, _ := sql.Open(config.DatabaseDriver,config.TestDatabaseURL)
 	testDb, err = gorm.Open(mysql.New(mysql.Config{
   	Conn: sqlDB,
 	}), &gorm.Config{})
 
 
-	testDb.AutoMigrate(&models.Teacher{}, &models.Student{})
-
+	err = testDb.AutoMigrate(&models.Teacher{}, &models.Student{})
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}

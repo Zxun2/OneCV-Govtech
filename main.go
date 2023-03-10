@@ -34,11 +34,18 @@ func main() {
 	}
 	log.Printf("Connected to database: %s", config.DatabaseURL)
 
-	database.AutoMigrate(&models.Teacher{}, &models.Student{})
+	err = database.AutoMigrate(&models.Teacher{}, &models.Student{})
+	if err != nil {
+		log.Fatal("Cannot migrate models: ", err)
+	}
 	log.Printf("Successfully migrated models")
 
-	seed.SeedData(database)
-
+	err = seed.SeedData(database)
+	if err != nil {
+		log.Fatal("Cannot seed data: ", err)
+	}
+	log.Printf("Successfully seeded data")
+	
 	runServer(config, database)
 
 }

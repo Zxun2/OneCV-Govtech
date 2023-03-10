@@ -105,6 +105,7 @@ func TestCommonStudents(t *testing.T) {
 
 	// Test common students with non-existing teacher
 	commonStudents, err = services.GetCommonStudents(testDb, []string{sampleTeacherOne.Email, sampleTeacherTwo.Email, "non-existing-teacher"})
+	require.NoError(t, err)
 	require.Equal(t, 0, len(commonStudents))
 
 	// Test common students with empty teacher list
@@ -114,6 +115,7 @@ func TestCommonStudents(t *testing.T) {
 
 	// Test common students with one teacher
 	commonStudents, err = services.GetCommonStudents(testDb, []string{sampleTeacherOne.Email})
+	require.NoError(t, err)
 	require.Equal(t, len(emails), len(commonStudents))
 
 	// Clean up
@@ -128,10 +130,9 @@ func TestCommonStudents(t *testing.T) {
 
 func TestListStudentsWhoCanReceiveNotifications(t *testing.T) {
 	emails := utils.CreateListOfRandomEmails(3)
-	var studentsNotUnderTeacher []models.Student
 	randomEmails := utils.CreateListOfRandomEmails(3) 
 	for i := range randomEmails{
-		studentsNotUnderTeacher = append(studentsNotUnderTeacher, CreateRandomStudentEntry(t, randomEmails[i]))
+		CreateRandomStudentEntry(t, randomEmails[i])
 	}
 
 	sampleTeacherOne := CreateTeacherWithSpecifiedStudents(t, emails)

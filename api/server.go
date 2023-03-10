@@ -2,6 +2,7 @@ package api
 
 import (
 	"Zxun2/OneCV-Govtech/utils"
+	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -45,7 +46,10 @@ func (server *Server) setupRouter() {
 	api.POST("/suspend", server.Suspend)
 	api.POST("/retrievefornotifications", server.RetrieveNotifications)
 
-	router.Run(server.config.HTTPServerAddress)
+	err := router.Run(server.config.HTTPServerAddress)
+	if err != nil {
+		log.Fatal("Cannot start server")
+	}
 
 	server.router = router
 }
