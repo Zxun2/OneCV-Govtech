@@ -28,5 +28,5 @@ type Student struct {
 	ID     		uint8  		`gorm:"primaryKey" json:"id"`
 	Email  		string 		`gorm:"not null;unique" json:"email"`
 	Status 		Status 		`gorm:"default:active;not null" json:"status"`
-	Teachers 	[]Teacher `gorm:"many2many:teacher_students;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"teacher"`
+	Teachers 	[]Teacher	`gorm:"many2many:teacher_students;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"teacher"`
 }

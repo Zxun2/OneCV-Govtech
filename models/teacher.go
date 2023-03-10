@@ -12,6 +12,8 @@ const (
 var (
 	// ErrTeacherNotFound is the error for when a Teacher is not found
 	ErrTeacherNotFound = &errors.RecordNotFoundError{Model: teacherModelName}
+	// ErrTeacherAlreadyExists is the error for when a Teacher already exists
+	ErrTeacherAlreadyExists = &errors.RecordAlreadyExistsError{Model: teacherModelName}
 )
 
 // Teacher is the model for the teachers table

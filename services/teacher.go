@@ -8,8 +8,20 @@ import (
 	"gorm.io/gorm"
 )
 
+// checkTeacherExists checks if a teacher exists in the database
+func checkTeacherExists(db *gorm.DB, email string) bool {
+	var count int64
+	db.Model(&models.Teacher{}).Where("email = ?", email).Count(&count)
+	return count > 0
+}
+
 // CreateTeacher create a teacher
 func CreateTeacher(db *gorm.DB, email string) (*gorm.DB, error) {
+	isExist := checkTeacherExists(db, email)
+	if isExist {
+		return nil, models.ErrTeacherAlreadyExists
+	}
+
 	teacher := models.Teacher{
 		Email: email,
 	}
