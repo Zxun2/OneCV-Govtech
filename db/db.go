@@ -1,27 +1,22 @@
 package db
 
 import (
-	"Zxun2/OneCV-Govtech/utils"
-
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-// Store is the global database connection
-var Store *gorm.DB
-
 // Connect connects to the database
-func Connect(config utils.Config)(*gorm.DB, error) {
+func Connect(dbSource string, logLevel logger.LogLevel)(*gorm.DB, error) {
 	var err error
-	dbDriver := mysql.Open(config.DatabaseURL)
-	gormCfg := newGormConfig(config.LogLevel)
-	Store, err = gorm.Open(dbDriver, gormCfg)
+	dbDriver := mysql.Open(dbSource)
+	gormCfg := newGormConfig(logLevel)
+	db, err := gorm.Open(dbDriver, gormCfg)
 	if err != nil {
 		return nil, err
 	}
-	return Store, nil
+	return db, nil
 }
 
 // newGormConfig creates a gorm.Config with the specified log level.

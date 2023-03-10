@@ -17,7 +17,7 @@ var (
 // Teacher is the model for the teachers table
 type Teacher struct {
 	ID       			uint8     `gorm:"primaryKey" json:"id"`
-	Email    			string    `gorm:"not null" json:"email"`
-	Students 			[]Student `gorm:"many2many:teacher_students" json:"students"`
+	Email    			string    `gorm:"not null;unique" json:"email"`
+	Students 			[]Student `gorm:"many2many:teacher_students;constraint:OnDelete:CASCADE,OnUpdate:CASCADE" json:"students"`
 }
 
