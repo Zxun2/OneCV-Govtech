@@ -26,11 +26,13 @@ func TestMain(m *testing.M) {
 	testDb, err = gorm.Open(mysql.New(mysql.Config{
   	Conn: sqlDB,
 	}), &gorm.Config{})
-
+	if err != nil {
+		log.Fatal("Cannot connect to db: ", err)
+	}
 
 	err = testDb.AutoMigrate(&models.Teacher{}, &models.Student{})
 	if err != nil {
-		log.Fatal("Cannot connect to db: ", err)
+		log.Fatal("Failed to migrate models: ", err)
 	}
 
 	os.Exit(m.Run())

@@ -19,6 +19,8 @@ const (
 var (
 	// ErrStudentNotFound is the error for when a student is not found
 	ErrStudentNotFound = &errors.RecordNotFoundError{Model: studentModelName}
+	// ErrStudentAlreadyExists is the error for when a student already exists
+	ErrStudentAlreadyExists = &errors.RecordAlreadyExistsError{Model: studentModelName}
 )
 
 // Student is the model for the students table

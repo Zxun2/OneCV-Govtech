@@ -1,9 +1,5 @@
 package api
 
-import (
-	"net/http"
-)
-
 // Response is the model for the response
 type Response struct {
 	Message			string `json:"message,omitempty"`
@@ -51,13 +47,6 @@ type ListStudentReceivingNotificationPayload struct {
 type ListStudentReceivingNotificationResponse struct {
 	Response
 	Recipients 		[]string `json:"recipients"`
-}
-
-func makeResponseCode(response Response) int {
-	if len(response.Message) == 0 {
-		return http.StatusOK
-	}
-	return http.StatusInternalServerError
 }
 
 func makeResponseErr(err error) Response {

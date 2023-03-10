@@ -21,6 +21,11 @@ func SuspendStudent(db *gorm.DB, email string) (error) {
 
 // CreateStudent create a Student
 func CreateStudent(db *gorm.DB, email string) (*gorm.DB, error) {
+	isExist := checkStudentExists(db, email)
+	if isExist {
+		return nil, models.ErrStudentAlreadyExists
+	}
+
 	student := models.Student{
 		Email: email,
 	}
