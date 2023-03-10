@@ -40,9 +40,24 @@ migratedown-1:
 sqlc: 
 	sqlc generate
 
-server:
-	@echo "Starting server..."
+run:
+	@echo "Running server in development mode..."
 	go build -o main .
 	go run .
 
-.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc start
+lint:
+	@echo "Running formatting..."
+	@go fmt ./...
+	@echo "Running linter..."
+	@golangci-lint run --fix
+
+test:
+	@echo "Running tests..."
+	go test ./tests
+
+clean:
+	@echo "Removing build files and cached files..."
+	@rm -rf ${BUILD_DIR}
+	@go clean -testcache
+
+.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc start lint test clean
