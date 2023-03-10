@@ -1,5 +1,11 @@
 # OneCV Govtech Technical Assessment
 
+By: Lee Zong Xun
+
+## Introduction
+
+This is a REST API built using Go and MySQL. It is a simple application that allows teachers to register students and retrieve a list of students common to a given list of teachers.
+
 ## Set up guide
 
 This project is built using docker. To run the project, you will need to have docker installed on your machine.
