@@ -12,7 +12,7 @@ This project is built using docker. To run the project, you will need to have do
 
 1. Clone the repository
 2. Run `docker pull mysql:8.0` to pull the MySQL docker image
-   (Note: Please give it some time to spin up the database before running the next command!)
+   (**Note: Please give it some time to spin up the database before running the next command!**)
 3. Run `make setup` to run the MySQL database
 4. Run `make createdb` to create the database
 5. Finally, run `make run` to run the application
