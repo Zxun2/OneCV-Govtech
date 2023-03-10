@@ -18,6 +18,8 @@ This project is built using docker. To run the project, you will need to have do
 5. Run `make createdb` to create the database
 6. Finally, run `make run` to run the application
 
+The needed environment variables are given in the `app.env` file. You can change the values of the environment variables in the `app.env` file to suit your needs.
+
 ## Testing guide
 
 To run the tests, run `make test` in the root directory of the project. Ensure that the MySQL **testing** database is running before running the tests. You can run the tests using the following command:
