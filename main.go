@@ -28,7 +28,7 @@ func main() {
 		default:
 	}
 
-	database, err := db.Connect(config)
+	database, err := db.Connect(config.DatabaseURL, config.LogLevel)
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
@@ -37,7 +37,7 @@ func main() {
 	database.AutoMigrate(&models.Teacher{}, &models.Student{})
 	log.Printf("Successfully migrated models")
 
-	seed.SeedData()
+	seed.SeedData(database)
 
 	runServer(config, database)
 
