@@ -18,3 +18,12 @@ func ParseEmails(input string) []string {
 	}
 	return emails
 }
+
+// CreateListOfRandomEmails creates list of random emails 
+func CreateListOfRandomEmails(n int) []string {
+	var emails []string
+	for i := 0; i < n; i++ {
+			emails = append(emails, RandomEmail())
+	}
+	return emails
+}

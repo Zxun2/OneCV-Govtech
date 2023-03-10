@@ -10,6 +10,8 @@ import (
 type Config struct {
 	Environment          string        `mapstructure:"ENVIRONMENT"`
 	DatabaseURL 			 	 string        `mapstructure:"DATABASE_URL"`
+	TestDatabaseURL 		 string        `mapstructure:"TEST_DATABASE_URL"`
+	DatabaseDriver 			 string        `mapstructure:"DATABASE_DRIVER"`
 	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
 	LogLevel     				 logger.LogLevel
 }
