@@ -14,12 +14,12 @@ func (s *Server) RetrieveNotifications(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, makeResponseErr(err),
+			c.AbortWithStatusJSON(http.StatusInternalServerError, makeResponseErr(err),
 		)
 	}
 	students, err := services.ListStudentsReceiveNotifications(s.store, payload.Teacher, payload.Notification)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, ListStudentReceivingNotificationResponse{
+		c.JSON(http.StatusInternalServerError, ListStudentReceivingNotificationResponse{
 			Response: makeResponseErr(err),
 		})
 		return	
@@ -36,7 +36,7 @@ func (s *Server) Register(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&payload)
 	if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, makeResponseErr(err),
+			c.AbortWithStatusJSON(http.StatusInternalServerError, makeResponseErr(err),
 		)
 	}
 
@@ -57,7 +57,7 @@ func (s *Server) GetCommonStudents(c *gin.Context) {
 	log.Println(teachers)
 	students, err := services.GetCommonStudents(s.store, teachers)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, RetrieveCommonStudentsResponse{
+		c.JSON(http.StatusInternalServerError, RetrieveCommonStudentsResponse{
 			Response: makeResponseErr(err),
 		})
 		return
