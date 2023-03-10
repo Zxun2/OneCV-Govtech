@@ -8,12 +8,12 @@ import (
 // Config stores all configuration of the application.
 // The values are read by viper from a config file or environment variable.
 type Config struct {
-	Environment          string        `mapstructure:"ENVIRONMENT"`
-	DatabaseURL 			 	 string        `mapstructure:"DATABASE_URL"`
-	TestDatabaseURL 		 string        `mapstructure:"TEST_DATABASE_URL"`
-	DatabaseDriver 			 string        `mapstructure:"DATABASE_DRIVER"`
-	HTTPServerAddress    string        `mapstructure:"HTTP_SERVER_ADDRESS"`
-	LogLevel     				 logger.LogLevel
+	Environment					string        `mapstructure:"ENVIRONMENT"`
+	DatabaseURL 			 	string        `mapstructure:"DATABASE_URL"`
+	TestDatabaseURL 		string        `mapstructure:"TEST_DATABASE_URL"`
+	DatabaseDriver 			string        `mapstructure:"DATABASE_DRIVER"`
+	HTTPServerAddress   string        `mapstructure:"HTTP_SERVER_ADDRESS"`
+	LogLevel     				logger.LogLevel
 }
 
 // LoadConfig reads configuration from file or environment variables.
