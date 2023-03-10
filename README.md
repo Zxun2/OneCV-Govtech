@@ -48,9 +48,6 @@ There are 4 main routes in the application:
 ├── errors
 │   ├── badrequest.go
 │   └── recordnotfound.go
-├── go.mod
-├── go.sum
-├── main
 ├── main.go
 ├── models
 │   ├── student.go
