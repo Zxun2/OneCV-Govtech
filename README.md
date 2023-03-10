@@ -11,11 +11,12 @@ This is a REST API built using Go and MySQL. It is a simple application that all
 This project is built using docker. To run the project, you will need to have docker installed on your machine.
 
 1. Clone the repository
-2. Run `docker pull mysql:8.0` to pull the MySQL docker image
+2. Install the dependencies
+3. Run `docker pull mysql:8.0` to pull the MySQL docker image
    (Note: Please give it some time to spin up the database before running the next command!)
-3. Run `make setup` to run the MySQL database
-4. Run `make createdb` to create the database
-5. Finally, run `make run` to run the application
+4. Run `make setup` to run the MySQL database
+5. Run `make createdb` to create the database
+6. Finally, run `make run` to run the application
 
 ## Testing guide
 
