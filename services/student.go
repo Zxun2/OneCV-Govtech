@@ -42,7 +42,7 @@ func DeleteStudent(db *gorm.DB, email string) (*gorm.DB, error) {
 
 func checkStudentExists(db *gorm.DB, email string) bool {
 	var count int64
-	result := db.Model(&models.Student{Email: email}).Count(&count)
+	result := db.Model(&models.Student{}).Where("email = ?", email).Count(&count)
 	return result.Error == nil && count > 0
 }
 

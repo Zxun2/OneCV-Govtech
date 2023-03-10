@@ -54,8 +54,6 @@ lint:
 	@golangci-lint run --fix
 
 test:
-	@echo "Creating test database..."
-	docker exec -it mysql-root mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "create database ${TEST_NAME}"
 	@echo "Running tests..."
 	go test ./tests
 
