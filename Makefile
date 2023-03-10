@@ -1,7 +1,10 @@
 include app.env
 
-DB_NAME="onecvdb"
 DB_URL="mysql://root:${MYSQL_ROOT_PASSWORD}@tcp/${DB_NAME}"
+DB_NAME="onecvdb"
+
+TEST_DB_URL="mysql://root:${MYSQL_ROOT_PASSWORD}@tcp/${TEST_NAME}"
+TEST_NAME="testdb"
 
 mysql: 
 	docker run --name mysql-root -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d mysql:8.0
@@ -11,6 +14,12 @@ createdb:
 
 dropdb: 
 	docker exec -it mysql-root mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "drop database ${DB_NAME}"
+
+createtestdb:
+	docker exec -it mysql-root mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "create database ${TEST_NAME}"
+
+droptestdb: 
+	docker exec -it mysql-root mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "drop database ${TEST_NAME}"
 
 migrateup:
 	@echo "Migrating..." 
