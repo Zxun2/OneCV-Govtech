@@ -6,10 +6,12 @@ DB_NAME="onecvdb"
 TEST_DB_URL="mysql://root:${MYSQL_ROOT_PASSWORD}@tcp/${TEST_NAME}"
 TEST_NAME="testdb"
 
-mysql: 
+setup: 
+	@echo "Starting MySQL..."
 	docker run --name mysql-root -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d mysql:8.0
 
 createdb: 
+	@echo "Creating main database..."
 	docker exec -it mysql-root mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "create database ${DB_NAME}"
 
 dropdb: 
@@ -52,6 +54,8 @@ lint:
 	@golangci-lint run --fix
 
 test:
+	@echo "Creating test database..."
+	docker exec -it mysql-root mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "create database ${TEST_NAME}"
 	@echo "Running tests..."
 	go test ./tests
 
@@ -60,4 +64,4 @@ clean:
 	@rm -rf ${BUILD_DIR}
 	@go clean -testcache
 
-.PHONY: mysql createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc start lint test clean
+.PHONY: setup createdb dropdb migrateup migrateup-1 migratedown migratedown-1 sqlc start lint test clean

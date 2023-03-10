@@ -45,7 +45,7 @@ func main() {
 		log.Fatal("Cannot seed data: ", err)
 	}
 	log.Printf("Successfully seeded data")
-	
+
 	runServer(config, database)
 
 }
